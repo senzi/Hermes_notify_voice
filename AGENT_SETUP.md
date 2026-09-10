@@ -16,7 +16,9 @@
 
 ---
 
-## 1. 前置检查（先跑，别跳）
+## 1. 开工前：先问用户 + 查环境（别跳）
+
+### 1.1 环境检查
 
 ```bash
 python --version      # 需 3.8+
@@ -27,14 +29,68 @@ python --version      # 需 3.8+
 | 平台 | **Windows**（播放走系统自带的 `winsound`，无需额外安装任何软件） |
 | Python | 3.8+，只用标准库（`urllib` / `subprocess` / `winsound`） |
 
-**密钥**：
+### 1.2 先问用户三件事（**交互**：合并成一次问，别挤牙膏）
+
+> 装这个语音播报要三样东西，先确认一下：
+> 1. 你有 MiniMax 的 API key 吗？
+> 2. 注册过 MiniMax 开放平台账号吗？
+> 3. 账户充过钱吗（余额够不够）？
+
+按回答分流：
+
+| 情况 | 你要做的 |
+| --- | --- |
+| 三样都齐 | 直接进 §2 安装 |
+| **没注册** | 给注册入口 https://platform.minimaxi.com/ ，说明「手机号注册，免费」 |
+| **没 key** | 指路：登录后 →「账户管理」→「接口密钥」→ 创建密钥 → **当场复制保存**（只显示一次）。直达 https://platform.minimaxi.com/user-center/basic-information/interface-key |
+| **没充值 / 不确定余额** | 充值 https://platform.minimaxi.com/user-center/payment/balance ；消费与充值记录 https://platform.minimaxi.com/console/recharge-records |
+| 来源是**分发包**（已带 key） | Q1/Q2 可跳过，只需确认 Q3（余额） |
+
+**开 key 三步**（可以直接念给用户听）：
+
+1. 打开 https://platform.minimaxi.com/ → 手机号注册 / 登录
+2. 左侧「账户管理」→「接口密钥」→ 创建密钥 → 命名 → 复制（**只显示一次，务必当场保存**）
+3. 左侧「账户管理」→「余额」→ 充值（按量计费，充一点就够）
+
+### 1.3 费率（先说清楚，别让人以为很贵）
+
+**按字符计费**，本项目默认模型 `speech-2.8-turbo` = **2 元/万字符**
+（官方定价页 https://platform.minimaxi.com/docs/guides/pricing-paygo 的「语音合成（TTS）」表）
+
+计费口径：**1 个汉字 = 2 个字符**；英文字母、标点、空格、回车各算 1 个字符。
+
+| 用量 | 花费 |
+| --- | --- |
+| 一句播报（~15 汉字 = 30 字符） | ≈ **0.006 元** |
+| 一天 20 句 | ≈ 0.12 元 / 天（一个月 ≈ 3.6 元） |
+| 一天 100 句 | ≈ 0.6 元 / 天（一个月 ≈ 18 元） |
+| 充 10 元 | ≈ **1600 句**播报 |
+
+模型选择：`speech-2.8-turbo`（2 元/万字符，本项目默认）；`speech-2.8-hd`（3.5 元/万字符，音质更好、一般用不上）。
+
+> **不用买套餐**：语音套餐（¥360 起 / 200 万字符）是给每天几万句的量准备的，
+> 按量充一点就够用很久 —— https://platform.minimaxi.com/docs/guides/pricing-speech
+
+### 1.4 工具箱（按需把这些链接丢给用户）
+
+| 用途 | 链接 |
+| --- | --- |
+| 开放平台首页 / 注册 | https://platform.minimaxi.com/ |
+| 接口密钥（创建 / 查看） | https://platform.minimaxi.com/user-center/basic-information/interface-key |
+| 充值 | https://platform.minimaxi.com/user-center/payment/balance |
+| 充值 / 消费记录 | https://platform.minimaxi.com/console/recharge-records |
+| 按量计费定价（含 TTS 费率表） | https://platform.minimaxi.com/docs/guides/pricing-paygo |
+| 语音资源包（大用量才考虑） | https://platform.minimaxi.com/docs/guides/pricing-speech |
+| TTS 接口文档 | https://platform.minimaxi.com/docs/api-reference/speech-t2a-http |
+
+### 1.5 密钥放哪
 
 - `key.txt`（一行，`#` 开头为注释）要放到**两个位置** —— 两种形态各读自己目录的：
   - 插件形态：`<版本>/key.txt`（跟着 5 个插件文件拷进 `plugins/<插件名>/`）
   - Skill 形态：`<版本>/skill/scripts/key.txt`
 - 格式模板：`<版本>/key.txt.example`
 - **若来源是分发包**：两处 `key.txt` 通常已内置，开箱即用
-- **若来源是本开源仓库**：**不含密钥**，需自己申请（platform.minimaxi.com → 账户管理 → 接口密钥）后放进上述两处
+- **若来源是本开源仓库**：**不含密钥**，需按 §1.2 申请后放进上述两处
 - 也支持环境变量 `MINIMAX_API_KEY`（优先级更高）
 
 **不要把密钥提交到 git、贴到聊天里或写进日志。**
