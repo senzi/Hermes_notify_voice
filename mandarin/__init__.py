@@ -109,7 +109,7 @@ def register(ctx):
 
     ctx.register_tool(
         name="notify_voice",
-        toolset="tts",
+        toolset="minimax_notify",
         schema=SCHEMA,
         handler=handle_notify,
     )

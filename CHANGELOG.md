@@ -1,6 +1,22 @@
 # Changelog
 
-## [1.3.1] - 2026-09-10
+## [1.3.2] - 2026-09-10
+
+- **回退**：toolset 归属改回自建的 `minimax_notify`。改挂内置 `tts` 不可行 ——
+  `ctx.register_tool(toolset="tts")` 塞不进静态 toolset（`tts` 在 `TOOLSETS` 里写死为 `text_to_speech`），
+  改了反而**连桌面端也拿不到工具**。
+- **已知限制（重要）**：`notify_voice` 在 **CLI / TUI 会话里不可见**。这些入口走
+  `platform_toolsets.<platform>` 白名单，而 **user 插件的自建 toolset 不被该列表承认**
+  （写进去会判 `unknown toolset` 并在 update 时告警）。**桌面端正常** —— 它走平台复合 toolset
+  （`hermes-desktop`），不经过这份白名单。
+- 已试过但**无效**的两种修法：① 把自建 toolset 名加进 `platform_toolsets.cli`；
+  ② 在 `plugin.yaml` 声明 `provides_tools: [notify_voice]`（doctor 的 WARN 会消失，但 CLI/TUI 仍不可见）。
+- 源码给出的契约：要让插件工具在 CLI/TUI 可见，需把注册放进 **`tools.py` 的 `register_tools(ctx)`**
+  （`hermes_cli/plugins_loader.py`："declares provides_tools … but has no tools.py; those tools will not be
+  available in CLI/TUI sessions"）。本包尚未按该形态重构。
+- 变通：CLI/TUI 下改用命令行直接跑脚本（等于 skill 形态的行为）。
+
+## [1.3.1] - 2026-09-10（已回退）
 
 - 插件的 toolset 归属从自建的 `minimax_notify` 改为 **`tts`**。
   原因：Hermes 按入口维护 `platform_toolsets` 白名单，**自建 toolset 名不在其中** ——
