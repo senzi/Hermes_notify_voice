@@ -144,6 +144,12 @@ hermes plugins enable minimax-notify        # 粤语版：minimax-notify-yue
 
 脚本路径可用环境变量 `MINIMAX_NOTIFY_SCRIPT` 覆盖（默认取插件目录下的 `minimax-notify.py`）。
 
+**默认后台播报（不阻塞）**：`notify_voice` 发起后**立即返回**（实测 ~4 ms），合成与播放在后台子进程里完成 —— Agent 不会为了一声播报卡住思考或输出。
+
+- 需要成功/失败回执时才传 `sync=true`（此时等播完才返回，约 2–4 秒）
+- 最近一次后台输出写在 `%TEMP%\minimax-notify.log`，排查时看它
+- 命令行直接调用脚本不受影响：默认同步（`--async` 可切异步）
+
 ### 2.2 Skill 形态
 
 目标路径：`$HERMES_HOME/skills/<分类>/<skill名>/`（Windows 默认 `%LOCALAPPDATA%\hermes\skills\`）

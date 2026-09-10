@@ -24,7 +24,8 @@ MiniMax TTS 合成一句话 + 系统提示音，在任务开始 / 进展 / 完�
 
 - 一句话就能播报：`python minimax-notify.py "任务完成，可以看结果了"`
 - 先响提示音再说话（`ding` / `double` / `alert` / `chime` / `none`）
-- 默认**同步**播放（播完才返回，保证出声）；`--async` 可切异步不阻塞
+- 命令行默认**同步**播放（播完才返回，保证出声）；`--async` 可切异步
+- 作为 **`notify_voice` 工具调用时默认后台**：发起即返回（实测 ~4 ms），合成与播放在后台子进程完成 —— 不阻塞 Agent 的思考与输出
 - 音色任选（任意 MiniMax `voice_id` 或内置别名），音量 / 语速 / 语言可配
 - 两种 Agent 集成：**Skill**（行为规则）+ **Hermes 原生插件**（`notify_voice` 工具）
 - 成本极低：约 0.006 元/次（speech-2.8-turbo，2 元/万字符）

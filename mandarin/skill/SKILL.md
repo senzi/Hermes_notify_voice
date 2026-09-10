@@ -49,6 +49,7 @@ python <skill目录>/scripts/minimax-notify.py "文本" [-s 提示音] [-v 音�
 ```
 
 - **默认就是同步**：调用会阻塞播完才返回（~1-4 秒），**保证出声**——这是给用户提醒的硬要求，宁可阻塞几秒也不能静音。无需传参
+- **通过 `notify_voice` 工具调用时是后台的**：发起即返回（~4 ms），播报自己播完，不会卡住你的思考或输出；只有传 `sync=true` 才等播完拿回执
 - `--async`：异步播放（调用立即返回，子进程继续播）——子进程用 `CREATE_NO_WINDOW | CREATE_NEW_PROCESS_GROUP` 派生（**不弹 cmd 窗口** + 脱离调用进程组独立存活，父进程瞬时返回也不会被整组收走），std 重定向 DEVNULL。默认仍走同步（最稳、保证出声）；确需不阻塞时用 `--async`。⚠️ 别用 `DETACHED_PROCESS`，会闪 conhost 窗口
 - 提示音 `-s`：`ding`（一般）/ `alert`（异常）/ `double`（完成）/ `chime`（进展）/ `none`
 - 音色 `-v`：默认取 `scripts/config.json`（当前 `Chinese (Mandarin)_Southern_Young_Man`）；可传预置别名（`--voices` 查看）或任意 voice_id

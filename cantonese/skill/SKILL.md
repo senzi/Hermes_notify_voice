@@ -76,6 +76,7 @@ python <skill目录>/scripts/minimax-notify.py "文本" [-s 提示音] [-v 音�
 ```
 
 - **默认就是同步**：播完才返回（~1-4 秒），**保证出声**；`--async` 可切异步不阻塞
+- **通过 `notify_voice` 工具调用时是后台的**：发起即返回（~4 ms），播报自己播完，不会卡住你的思考或输出；只有传 `sync=true` 才等播完拿回执
 - 提示音 `-s`：`ding`（一般）/ `alert`（异常）/ `double`（完成）/ `chime`（进展）/ `none`
 - 音色 `-v`：默认取 `scripts/config.json`；粤语可用别名
   `yue_gentle`（默认）/ `yue_kind` / `yue_cute` / `yue_playful` / `yue_host_f` / `yue_host_m`

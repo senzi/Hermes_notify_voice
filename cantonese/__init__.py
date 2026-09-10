@@ -3,17 +3,22 @@
 薄封装：handler 调用**本插件目录内**的 minimax-notify.py（脚本与插件一起分发，
 自包含，不依赖任何绝对路径）。可用环境变量 MINIMAX_NOTIFY_SCRIPT 覆盖脚本位置。
 
+**默认完全后台**：Popen 起子进程后立即返回（几十毫秒），合成与播放在后台继续 ——
+不阻塞 Agent 的思考与输出。需要回执时显式传 sync=true。
+
 粤语版差异：默认音色为粤语（`Cantonese_GentleLady`），`language_boost=Chinese,Yue`
-强制走粤语读音通道；工具描述里要求 model 用**粤语词**播报，并在回复正文给出普通话对照。
+强制走粤语读音通道；工具描述要求用**粤语词**播报，并在回复正文给出普通话对照。
 """
 
 import json
 import os
 import subprocess
 import sys
+import tempfile
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.environ.get("MINIMAX_NOTIFY_SCRIPT") or os.path.join(_HERE, "minimax-notify.py")
+LOG_PATH = os.path.join(tempfile.gettempdir(), "minimax-notify.log")
 
 SCHEMA = {
     "name": "notify_voice",
@@ -22,7 +27,7 @@ SCHEMA = {
         "任务开始/阶段性进展/任务完成/出状况/有好消息/需用户拍板时调用；任务结束务必调用一次。"
         "text 必须用粤语（白话）口语词——讲「做嘢」唔讲「干活」、「睇」唔讲「看」、「搞掂」唔讲「完成」，"
         "净系加句尾「喇/咗/晒」唔算粤语；调用之后记得在回复正文写出佢嘅普通话意思（🔊 粤语 → 普通话）。"
-        "默认同步（播完才返回，约1-4秒）。"
+        "发起后立即返回，播报在后台进行，不会阻塞你继续思考或输出。"
     ),
     "parameters": {
         "type": "object",
@@ -42,7 +47,7 @@ SCHEMA = {
             },
             "sync": {
                 "type": "boolean",
-                "description": "省略/true=同步播放（播完才返回，保证出声）；false=异步（立即返回，子进程继续播）",
+                "description": "默认 false/省略 = 后台播报（立即返回，不阻塞）；true = 等到播完才返回，能拿到成功/失败回执",
             },
         },
         "required": ["text"],
@@ -68,21 +73,40 @@ def register(ctx):
             args += ["-s", params["sound"]]
         if params.get("voice"):
             args += ["-v", params["voice"]]
-        if params.get("sync") is False:
-            args += ["--async"]
 
         env = dict(os.environ)
         env["PYTHONIOENCODING"] = "utf-8"  # 子进程 stdout 统一 UTF-8，避免 GBK 管道乱码
+
+        # 同步模式（显式要求）：等到播完，能拿到回执
+        if params.get("sync") is True:
+            try:
+                proc = subprocess.run(
+                    args, capture_output=True, text=True,
+                    encoding="utf-8", errors="replace", timeout=60, env=env,
+                )
+                return json.dumps({
+                    "success": proc.returncode == 0,
+                    "output": proc.stdout.strip(),
+                    "error": proc.stderr.strip(),
+                }, ensure_ascii=False)
+            except Exception as e:  # noqa: BLE001
+                return json.dumps({"success": False, "error": str(e)}, ensure_ascii=False)
+
+        # 默认：完全后台 —— 立即返回，合成与播放在子进程里继续
         try:
-            proc = subprocess.run(
-                args, capture_output=True, text=True,
-                encoding="utf-8", errors="replace", timeout=60, env=env,
-            )
+            log = open(LOG_PATH, "wb")
+            try:
+                subprocess.Popen(
+                    args,
+                    creationflags=0x08000000 | 0x00000200,  # CREATE_NO_WINDOW | CREATE_NEW_PROCESS_GROUP
+                    stdin=subprocess.DEVNULL, stdout=log, stderr=log, close_fds=True, env=env,
+                )
+            finally:
+                log.close()
             return json.dumps({
-                "success": proc.returncode == 0,
-                "output": proc.stdout.strip(),
-                "error": proc.stderr.strip(),
-                "reminder": "记得在回复正文写出普通话对照（🔊 粤语 → 普通话）",
+                "success": True,
+                "mode": "background",
+                "note": f"播报已在后台发起（不阻塞思考/输出）；最近一次输出见 {LOG_PATH}；记得在回复正文写普通话对照",
             }, ensure_ascii=False)
         except Exception as e:  # noqa: BLE001
             return json.dumps({"success": False, "error": str(e)}, ensure_ascii=False)
