@@ -56,7 +56,6 @@ python --version      # 需 3.8+
 | **没注册** | 给注册入口 https://platform.minimaxi.com/ ，说明「手机号注册，免费」 |
 | **没 key** | 指路：登录后 →「账户管理」→「接口密钥」→ 创建密钥 → **当场复制保存**（只显示一次）。直达 https://platform.minimaxi.com/user-center/basic-information/interface-key |
 | **没充值 / 不确定余额** | 充值 https://platform.minimaxi.com/user-center/payment/balance ；消费与充值记录 https://platform.minimaxi.com/console/recharge-records |
-| 来源是**分发包**（已带 key） | Q1/Q2 可跳过，只需确认 Q3（余额） |
 
 **开 key 三步**（可以直接念给用户听）：
 
@@ -100,9 +99,8 @@ python --version      # 需 3.8+
 - `key.txt`（一行，`#` 开头为注释）要放到**两个位置** —— 两种形态各读自己目录的：
   - 插件形态：`<版本>/key.txt`（跟着 5 个插件文件拷进 `plugins/<插件名>/`）
   - Skill 形态：`<版本>/skill/scripts/key.txt`
-- 格式模板：`<版本>/key.txt.example`
-- **若来源是分发包**：两处 `key.txt` 通常已内置，开箱即用
-- **若来源是本开源仓库**：**不含密钥**，需按 §1.2 申请后放进上述两处
+- 格式模板：`<版本>/key.txt.example`（复制改名即可）
+- **本仓库不含密钥**，需按 §1.2 申请后放进上述两处
 - 也支持环境变量 `MINIMAX_API_KEY`（优先级更高）
 
 **不要把密钥提交到 git、贴到聊天里或写进日志。**
@@ -163,8 +161,7 @@ Copy-Item mandarin\skill\SKILL.md $dst
 Copy-Item mandarin\skill\scripts\* "$dst\scripts"
 ```
 
-密钥随包带上（`scripts/key.txt`），复制时已一并就位。
-**若来源是开源仓库**（不含密钥），需自己把 `key.txt` 放进这里的 `scripts/`。
+**本仓库不含密钥** —— 复制完记得把 `key.txt` 放进目标目录的 `scripts/`（见 §1.5）。
 
 **生效方式**：不需要重启，新会话里 Agent 读到 SKILL.md 就会按节奏调用。
 
@@ -276,7 +273,7 @@ python <脚本路径> --no-play -o t.wav --lang "Chinese,Yue" "开始做嘢喇�
 | `合成失败，仅播了提示音`（exit 2） | 密钥无效 / 余额不足 / 网络不通 | 核对密钥与 MiniMax 账户余额 |
 | 工具 `notify_voice` 不存在 | 插件未启用 | `hermes plugins enable <插件名>` |
 | 插件加载报错 | 脚本没和插件放一起 | 把 `minimax-notify.py` 放进插件目录，或设 `MINIMAX_NOTIFY_SCRIPT` |
-| 提示 `当前环境不支持 winsound` | 不是 Windows 环境 | 本包仅支持 Windows |
+| 提示 `当前环境不支持 winsound` | 不是 Windows 环境 | 本项目仅支持 Windows |
 | **装好了但从不播报** | **§3 没做**（缺 SOUL.md 常驻指令） | 回 §3 补上，再开新会话验证 |
 | **粤语版发音是普通话** | 没传 `language_boost` | `config.json` 里加 `"language_boost": "Chinese,Yue"` |
 | `接口错误 2013: invalid params: language_boost` | 值写错 | 只认 `Chinese` / `Chinese,Yue` / `auto` |

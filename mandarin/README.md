@@ -42,6 +42,7 @@ mandarin/
 ## 快速验证
 
 ```bash
+# 在版本目录内执行（cd mandarin）
 python minimax-notify.py -s ding "安装测试，能听到吗"
 # 听到「叮」+ 一句话，stdout 出现 [ok:sync] = 链路正常
 ```

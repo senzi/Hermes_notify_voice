@@ -55,6 +55,7 @@ cantonese/
 ## 快速验证
 
 ```bash
+# 在版本目录内执行（cd cantonese）
 # 1) 听到的是粤语（不是普通话），stdout 显示 voice=Cantonese_GentleLady
 python minimax-notify.py -s ding "开始做嘢喇，等几分钟"
 
