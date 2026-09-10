@@ -1,0 +1,7 @@
+{
+  "voice": "Chinese (Mandarin)_Southern_Young_Man",
+  "sound": "ding",
+  "model": "speech-2.8-turbo",
+  "vol": 1.5,
+  "speed": 1.0
+}

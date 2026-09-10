@@ -1,0 +1,3 @@
+name: minimax-notify
+version: "1.0.0"
+description: 语音播报提醒用户（MiniMax TTS + 本地提示音）。任务开始/进展/完成/出状况/有好消息时调用。
