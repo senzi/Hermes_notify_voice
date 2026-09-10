@@ -2,7 +2,7 @@
 name: minimax-notify-yue
 description: 用粤语语音报进度（MiniMax TTS 粤语音色+提示音）。任务开始、进展、完成、出状况、好消息时主动播报，并在回复正文附普通话对照。
 version: 1.7.0
-author: 小木
+author: 析染
 license: MIT
 ---
 

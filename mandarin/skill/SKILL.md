@@ -2,7 +2,7 @@
 name: minimax-notify
 description: 干活时给用户语音报进度（MiniMax TTS+提示音）。任务开始、进展、完成、出状况、好消息时主动播报。
 version: 1.6.0
-author: 小木
+author: 析染
 license: MIT
 ---
 
