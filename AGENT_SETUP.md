@@ -29,9 +29,12 @@ python --version      # 需 3.8+
 
 **密钥**：
 
-- 脚本同目录的 `key.txt`（一行，`#` 开头为注释）
-- **若来源是分发包**：包内通常已带 `key.txt`，开箱即用，无需额外配置
-- **若来源是本开源仓库**：**不含密钥**，需自己申请（platform.minimaxi.com → 账户管理 → 接口密钥）后写进 `key.txt`
+- `key.txt`（一行，`#` 开头为注释）要放到**两个位置** —— 两种形态各读自己目录的：
+  - 插件形态：`<版本>/key.txt`（跟着 5 个插件文件拷进 `plugins/<插件名>/`）
+  - Skill 形态：`<版本>/skill/scripts/key.txt`
+- 格式模板：`<版本>/key.txt.example`
+- **若来源是分发包**：两处 `key.txt` 通常已内置，开箱即用
+- **若来源是本开源仓库**：**不含密钥**，需自己申请（platform.minimaxi.com → 账户管理 → 接口密钥）后放进上述两处
 - 也支持环境变量 `MINIMAX_API_KEY`（优先级更高）
 
 **不要把密钥提交到 git、贴到聊天里或写进日志。**
@@ -97,6 +100,7 @@ Copy-Item mandarin\skill\scripts\* "$dst\scripts"
 ```
 
 密钥随包带上（`scripts/key.txt`），复制时已一并就位。
+**若来源是开源仓库**（不含密钥），需自己把 `key.txt` 放进这里的 `scripts/`。
 
 **生效方式**：不需要重启，新会话里 Agent 读到 SKILL.md 就会按节奏调用。
 

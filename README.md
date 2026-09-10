@@ -37,14 +37,14 @@ MiniMax TTS 合成一句话 + 系统提示音，在任务开始 / 进展 / 完�
 
 ```text
 <版本>/
+├── key.txt.example        ← 密钥模板（key.txt 要放两处，见「配置 → 密钥」）
 ├── plugin.yaml            ┐
 ├── __init__.py            │ 插件形态（notify_voice 工具）
 ├── minimax-notify.py      │   ——这 5 个文件必须同处一个目录
-├── config.json            │
-├── key.txt.example        ┘
+├── config.json            ┘
 └── skill/                 Skill 形态（行为规则）
     ├── SKILL.md
-    └── scripts/{minimax-notify.py, config.json, key.txt.example}
+    └── scripts/{minimax-notify.py, config.json}
 ```
 
 ### 方式 A：Hermes 原生插件
@@ -95,9 +95,16 @@ Copy-Item mandarin\skill\scripts\* "$dst\scripts"
 
 ### 密钥
 
-本仓库**不含密钥**。到 platform.minimaxi.com → 账户管理 → 接口密钥 申请，
-写进脚本同目录的 `key.txt`（一行，`#` 开头为注释）。模板见 `key.txt.example`。
-也支持环境变量 `MINIMAX_API_KEY`（优先级更高）。
+本仓库**不含密钥**。到 platform.minimaxi.com → 账户管理 → 接口密钥 申请。
+
+`key.txt`（一行密钥，`#` 开头为注释）要放到**两个位置** —— 两种形态各读自己目录的：
+
+| 形态 | key.txt 放哪 |
+| --- | --- |
+| 插件形态 | `<版本>/key.txt`（跟着 5 个插件文件一起拷进 `plugins/<插件名>/`） |
+| Skill 形态 | `<版本>/skill/scripts/key.txt` |
+
+格式模板：`<版本>/key.txt.example`。也支持环境变量 `MINIMAX_API_KEY`（优先级更高）。
 
 ### 默认参数
 

@@ -15,15 +15,29 @@
 
 ```text
 mandarin/
+├── key.txt.example        ← 密钥模板（key.txt 要放两处，见「密钥」）
 ├── plugin.yaml            ┐
 ├── __init__.py            │ 插件形态（提供 notify_voice 工具）
 ├── minimax-notify.py      │
 ├── config.json            │
-├── key.txt.example        ┘
 └── skill/                 Skill 形态
     ├── SKILL.md
-    └── scripts/{py, config.json, key.txt.example}
+    └── scripts/{py, config.json}
 ```
+
+## 密钥
+
+本仓库**不含密钥**。到 platform.minimaxi.com → 账户管理 → 接口密钥 申请，
+然后写进 `key.txt`（一行，`#` 开头为注释）。
+
+`key.txt` 要放到**两个位置** —— 两种形态各读自己目录的：
+
+| 装的形态 | key.txt 放哪 |
+| --- | --- |
+| 插件形态 | `mandarin/key.txt`（跟着 5 个插件文件一起拷进 `plugins/minimax-notify/`） |
+| Skill 形态 | `mandarin/skill/scripts/key.txt` |
+
+格式模板见 [`key.txt.example`](key.txt.example)（复制改名即可）。也支持环境变量 `MINIMAX_API_KEY`（优先级更高）。
 
 ## 快速验证
 
