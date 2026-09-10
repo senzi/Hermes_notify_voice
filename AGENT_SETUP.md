@@ -150,6 +150,10 @@ hermes plugins enable minimax-notify        # 粤语版：minimax-notify-yue
 - 最近一次后台输出写在 `%TEMP%\minimax-notify.log`，排查时看它
 - 命令行直接调用脚本不受影响：默认同步（`--async` 可切异步）
 
+**工具的 toolset 归属是 `tts`**（不是自建 toolset）—— 这样它在**所有界面**（桌面端 / TUI / CLI）都可见：
+Hermes 按入口维护 `platform_toolsets` 白名单，自建的 toolset 名不在其中，会出现"插件装了、工具却看不见"。
+副作用：`hermes tools disable tts` 会连带禁用 `notify_voice`。
+
 ### 2.2 Skill 形态
 
 目标路径：`$HERMES_HOME/skills/<分类>/<skill名>/`（Windows 默认 `%LOCALAPPDATA%\hermes\skills\`）

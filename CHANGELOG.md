@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.1] - 2026-09-10
+
+- 插件的 toolset 归属从自建的 `minimax_notify` 改为 **`tts`**。
+  原因：Hermes 按入口维护 `platform_toolsets` 白名单，**自建 toolset 名不在其中** ——
+  结果就是"插件 enable 了、`notify_voice` 却看不见"。桌面端能用的假象来自它走平台复合 toolset
+  （`hermes-desktop`），而 TUI / CLI 走 `platform_toolsets.cli` 就看不到。
+  挂到已有的 `tts` 后，各界面一致可用。
+- 副作用：`hermes tools disable tts` 会连带禁用 `notify_voice`。
+- （此前试过把自建名加进 `platform_toolsets.cli`，运行时仍判为 unknown toolset，**无效**。）
+
 ## [1.3.0] - 2026-09-10
 
 - `notify_voice` 改为**默认后台**：发起即返回（实测 ~4 ms），合成与播放在后台子进程完成，
