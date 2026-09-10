@@ -1,7 +1,7 @@
-# minimax-notify
+# Hermes_notify_voice
 
-给 AI Agent 用的**本地语音播报** CLI：MiniMax TTS 合成一句话 + 系统提示音，
-在任务开始 / 进展 / 完成 / 出状况时喊你一声 —— 不用一直盯着屏幕。
+给 AI Agent 用的**本地语音播报** CLI（命令与包名：`minimax-notify`）。
+MiniMax TTS 合成一句话 + 系统提示音，在任务开始 / 进展 / 完成 / 出状况时喊你一声 —— 不用一直盯着屏幕。
 
 **Windows · 单文件 · 零第三方依赖**（只用 Python 标准库）
 
