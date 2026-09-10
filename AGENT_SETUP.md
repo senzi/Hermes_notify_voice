@@ -29,14 +29,26 @@ python --version      # 需 3.8+
 | 平台 | **Windows**（播放走系统自带的 `winsound`，无需额外安装任何软件） |
 | Python | 3.8+，只用标准库（`urllib` / `subprocess` / `winsound`） |
 
-### 1.2 先问用户三件事（**交互**：合并成一次问，别挤牙膏）
+### 1.2 先问用户四件事（**交互**：合并成一次问，别挤牙膏）
 
-> 装这个语音播报要三样东西，先确认一下：
-> 1. 你有 MiniMax 的 API key 吗？
-> 2. 注册过 MiniMax 开放平台账号吗？
-> 3. 账户充过钱吗（余额够不够）？
+> 装这个语音播报，先确认四件事：
+> 1. 要**哪个版本**？普通话版（日常报进度）/ 粤语学习者版（粤语播报 + 附普通话对照）
+> 2. 你有 MiniMax 的 API key 吗？
+> 3. 注册过 MiniMax 开放平台账号吗？
+> 4. 账户充过钱吗（余额够不够）？
 
-按回答分流：
+**Q1 · 选版本**：
+
+| 版本 | 目录 | 默认音色 | 适合谁 |
+| --- | --- | --- | --- |
+| **普通话版** | `mandarin/` | `Chinese (Mandarin)_Southern_Young_Man` | 日常「干活报进度」—— **用户没偏好就选这个** |
+| **粤语学习者版** | `cantonese/` | `Cantonese_GentleLady` + `language_boost: Chinese,Yue` | 想把语音提醒变成粤语输入、顺便泡耳朵 |
+
+- 粤语版额外要求：播报**用粤语词**（讲「做嘢」唔讲「干活」），且每条都在回复正文附 `🔊 粤语 → 普通话` 对照
+- **两版二选一**：skill 名 / 插件 id / 工具名（`notify_voice`）都会重名，同时装会互相覆盖
+- 选定后记下：`<版本>` = `mandarin` 或 `cantonese`，对应插件名 / skill 名见 §2 开头
+
+**Q2~Q4 · 账号与余额**，按回答分流：
 
 | 情况 | 你要做的 |
 | --- | --- |
@@ -97,19 +109,15 @@ python --version      # 需 3.8+
 
 ---
 
-## 2. 选版本 + 安装
+## 2. 安装（版本已在 §1.2 选定）
 
-### 2.0 先选版本（二选一，别都装）
+| 选定的版本 | `<版本>` 目录 | 插件名 / skill 名 |
+| --- | --- | --- |
+| 普通话版 | `mandarin` | `minimax-notify` |
+| 粤语学习者版 | `cantonese` | `minimax-notify-yue` |
 
-| 版本 | 目录 | 默认音色 | 特点 |
-| --- | --- | --- | --- |
-| **普通话版** | `mandarin/` | `Chinese (Mandarin)_Southern_Young_Man` | 日常「干活报进度」 |
-| **粤语学习者版** | `cantonese/` | `Cantonese_GentleLady` + `language_boost: Chinese,Yue` | 粤语播报，要求用**粤语词**并在回复正文附**普通话对照** |
-
-**两版二选一**：skill 名（`minimax-notify` / `minimax-notify-yue`）、插件 id、工具名 `notify_voice`
-都会重名，同时装会互相覆盖。**问用户要哪版**；用户没偏好就选普通话版。
-
-下面用 `<版本>` 表示选定的目录（`mandarin` 或 `cantonese`）。
+> ⚠️ 两版**只装一个**（skill 名 / 插件 id / 工具名重名会互相覆盖）。
+> 粤语版装完还要在 §3 用 `cantonese/SOUL_SNIPPET.md` 那段补触发层。
 
 ### 2.1 插件形态（提供 `notify_voice` 工具）
 
