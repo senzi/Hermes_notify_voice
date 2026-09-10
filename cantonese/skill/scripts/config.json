@@ -1,0 +1,8 @@
+{
+  "voice": "Cantonese_GentleLady",
+  "sound": "ding",
+  "model": "speech-2.8-turbo",
+  "vol": 1.5,
+  "speed": 1.0,
+  "language_boost": "Chinese,Yue"
+}

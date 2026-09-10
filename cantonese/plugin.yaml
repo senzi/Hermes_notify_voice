@@ -1,0 +1,3 @@
+name: minimax-notify-yue
+version: "1.0.0"
+description: 粤语语音播报（MiniMax TTS 粤语音色 + 本地提示音）。任务开始/进展/完成/出状况/有好消息时调用 notify_voice 播报。

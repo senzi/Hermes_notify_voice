@@ -45,6 +45,13 @@ VOICES = {
     "bestie": "Chinese (Mandarin)_Warm_Bestie",
     "qingse": "male-qn-qingse",
     "jingying": "male-qn-jingying",
+    # 粤语（白话）—— 本账号可用的全部 6 个
+    "yue_kind": "Cantonese_KindWoman",
+    "yue_gentle": "Cantonese_GentleLady",
+    "yue_cute": "Cantonese_CuteGirl",
+    "yue_playful": "Cantonese_PlayfulMan",
+    "yue_host_f": "Cantonese_ProfessionalHost（F)",
+    "yue_host_m": "Cantonese_ProfessionalHost（M)",
 }
 
 # 提示音预设：(频率Hz, 时长ms) 序列；None 表示 80ms 停顿
@@ -94,8 +101,11 @@ def play_sound(name):
             winsound.Beep(freq, ms)
 
 
-def synthesize(text, voice_id, model, vol, speed):
-    """调用 MiniMax 同步 TTS，返回 wav 音频字节。主地址失败自动试备用地址。"""
+def synthesize(text, voice_id, model, vol, speed, lang=""):
+    """调用 MiniMax 同步 TTS，返回 wav 音频字节。主地址失败自动试备用地址。
+
+    ``lang`` 是 language_boost：粤语必须传 "Chinese,Yue"，否则按普通读音念；留空则不传该字段。
+    """
     payload = {
         "model": model,
         "text": text,
@@ -113,6 +123,8 @@ def synthesize(text, voice_id, model, vol, speed):
         },
         "output_format": "hex",
     }
+    if lang:  # 语言增强：粤语需 "Chinese,Yue"（只认 Chinese / Chinese,Yue / auto）
+        payload["language_boost"] = lang
     data = json.dumps(payload).encode("utf-8")
     headers = {
         "Authorization": f"Bearer {load_api_key()}",
@@ -208,6 +220,8 @@ def main():
     parser.add_argument("--no-play", action="store_true", help="只合成不播放")
     parser.add_argument("--async", dest="async_play", action="store_true",
                         help="异步播放：立即返回，子进程播放（默认同步，播完才返回，保证出声）")
+    parser.add_argument("--lang", default=cfg.get("language_boost", ""),
+                        help="语言增强：Chinese / Chinese,Yue / auto（默认取 config.json 的 language_boost，留空不传）")
     parser.add_argument("--voices", action="store_true", help="列出预置音色与提示音后退出")
     args = parser.parse_args()
 
@@ -231,7 +245,7 @@ def main():
     # 2. 合成
     t0 = time.time()
     try:
-        audio, trace_id, info = synthesize(args.text, voice_id, args.model, args.vol, args.speed)
+        audio, trace_id, info = synthesize(args.text, voice_id, args.model, args.vol, args.speed, args.lang)
     except Exception as e:  # noqa: BLE001 —— TTS 失败降级：提示音已在步骤1播过，至少留个响，干净报错
         print(f"⚠️ 合成失败，仅播了提示音（无语音，请到会话查看）: {e}", file=sys.stderr)
         sys.exit(2)
